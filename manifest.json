@@ -1,0 +1,14 @@
+{
+	"name": "Read Queue",
+	"version": "1.0",
+	"background_page": "background.html",
+	"browser_action": {
+		"default_icon": "icon.png",
+      "default_title": "Read Queue",
+		"popup": "popup.html"
+	},
+	"permissions": [
+		"tabs",
+      "contextMenus"
+	]
+}
