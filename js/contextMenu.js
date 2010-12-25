@@ -10,12 +10,12 @@ var readQ = (function() {
    //private
    var q = [];
    var save = function() {
-      localStorage['readqueue'] = JSON.stringify(q);
+      window.localStorage['readqueue'] = JSON.stringify(q);
    }
    var load = function() {
-      if (localStorage['readqueue']) {
-         q = JSON.parse(localStorage['readqueue']);
-      }
+      if (window.localStorage['readqueue']) {
+         q = JSON.parse(window.localStorage['readqueue']);
+      } 
    }
    return ({ //public
       "enQ":function(item) {
@@ -51,6 +51,17 @@ var readQ = (function() {
 // config
 var context = ["link", "page", "image", "video", "audio"];
 
+var message = "";
+chrome.extension.onRequest.addListener(
+   function(request, sender, sendResponse) {
+      console.log(sender.tab ?
+         "from a content script:" + sender.tab.url :
+         "from the extension");
+      if (request.req == "message")
+         sendResponse({res: message});
+      else
+         sendResponse({});
+   });
 // click handlers
 var genericOnClick = function(info, tab) {
    var title = tab.title;
@@ -59,7 +70,11 @@ var genericOnClick = function(info, tab) {
       url = info['linkUrl'];
       title = url;
    }
+
    readQ.enQ({'title':title, 'url':url});
+   message = url + " added to the queue";
+   chrome.tabs.executeScript(null, { file:'js/displayMessage.js'});
+
 }
 var deQClick = function(info, tab) {
    var item = readQ.deQ();
@@ -67,7 +82,7 @@ var deQClick = function(info, tab) {
 }
 
 // contextMenus
-var parentItem = chrome.contextMenus.create({"title": "Add To ReadQueue",
+var enqItem = chrome.contextMenus.create({"title": "Add To ReadQueue",
       "contexts":context,
       "onclick":genericOnClick});
 

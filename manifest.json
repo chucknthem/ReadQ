@@ -1,5 +1,5 @@
 {
-	"name": "Read Queue",
+	"name": "ReadQ",
 	"version": "1.0",
 	"background_page": "background.html",
 	"browser_action": {
@@ -12,6 +12,9 @@
     "128": "icon-128.png"
    },
 	"permissions": [
-      "contextMenus"
+      "contextMenus",
+      "tabs",
+      "http://*/*",
+      "https://*/*"
 	]
 }

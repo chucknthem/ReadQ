@@ -3,8 +3,8 @@ function $(id) {
 }
 
 window.onload = function() {
-var bgPage = chrome.extension.getBackgroundPage();
-var readQ = bgPage.readQ;
+   var bgPage = chrome.extension.getBackgroundPage();
+   var readQ = bgPage.readQ;
    for (var i = 0; i < readQ.size(); i++) {
       var pel = document.createElement('p');
       var el = document.createElement('a');
@@ -15,7 +15,8 @@ var readQ = bgPage.readQ;
       el.setAttribute('q_id', i);
 
       el.onclick = function() {
-         readQ.remove(i);
+         var index = this.getAttribute('q_id');
+         bgPage.readQ.remove(index);
          chrome.tabs.create({'url':this.href});
       }
       el.onmouseover = function() {
