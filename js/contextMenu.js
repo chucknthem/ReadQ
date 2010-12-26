@@ -1,11 +1,3 @@
-// A generic onclick callback function.
-/*function genericOnClick(info, tab) {
-  console.log("item " + info.menuItemId + " was clicked");
-  console.log("info: " + JSON.stringify(info));
-  console.log("tab: " + JSON.stringify(tab));
-}
-*/
-
 var readQ = (function() {
    //private
    var q = [];
@@ -24,6 +16,11 @@ var readQ = (function() {
       },
       "deQ":function() {
          var item = q.shift();
+         save();
+         return item;
+      },
+      "pop":function() {
+         var item = q.pop();
          save();
          return item;
       },
@@ -46,6 +43,7 @@ var readQ = (function() {
 
    // main
    load();
+   setInterval(periodicSave, 5000); 
 })();
 // config
 var context = ["link", "page", "image", "video", "audio"];
@@ -64,7 +62,10 @@ chrome.extension.onRequest.addListener(
          sendResponse({res: message});
       } else if (request.req == "deQ") {
          var item = readQ.deQ();
-         chrome.tabs.create({'url':item.url});
+         if (item) chrome.tabs.create({'url':item.url});
+      } else if (request.req == "pop") {
+         var item = readQ.pop();
+         if (item) chrome.tabs.create({'url':item.url});
       } else if (request.req == "enQ") {
          readQ.enQ(request.item);
          displayMessage(request.item.url + " added to readQ");
@@ -90,7 +91,7 @@ var genericOnClick = function(info, tab) {
 }
 var deQClick = function(info, tab) {
    var item = readQ.deQ();
-   chrome.tabs.create({'url':item.url});
+   if (item) chrome.tabs.create({'url':item.url});
 }
 
 // contextMenus
