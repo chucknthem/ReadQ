@@ -47,21 +47,35 @@ var readQ = (function() {
    // main
    load();
 })();
-
 // config
 var context = ["link", "page", "image", "video", "audio"];
 
+// message passing
 var message = "";
+
+var displayMessage = function (msg) {
+   message = msg;
+   chrome.tabs.executeScript(null, { file:'js/displayMessage.js'});
+}
+
 chrome.extension.onRequest.addListener(
    function(request, sender, sendResponse) {
-      console.log(sender.tab ?
-         "from a content script:" + sender.tab.url :
-         "from the extension");
-      if (request.req == "message")
+      if (request.req == "message") {
          sendResponse({res: message});
-      else
+      } else if (request.req == "deQ") {
+         var item = readQ.deQ();
+         chrome.tabs.create({'url':item.url});
+      } else if (request.req == "enQ") {
+         readQ.enQ(request.item);
+         displayMessage(request.item.url + " added to readQ");
+      } else if (request.req == "remove") {
+         var item = readQ.deQ();
+         displayMessage(item.url + " removed from readQ");
+      } else {
          sendResponse({});
+      }
    });
+
 // click handlers
 var genericOnClick = function(info, tab) {
    var title = tab.title;
@@ -72,9 +86,7 @@ var genericOnClick = function(info, tab) {
    }
 
    readQ.enQ({'title':title, 'url':url});
-   message = url + " added to the queue";
-   chrome.tabs.executeScript(null, { file:'js/displayMessage.js'});
-
+   displayMessage(url + " added to the queue");
 }
 var deQClick = function(info, tab) {
    var item = readQ.deQ();

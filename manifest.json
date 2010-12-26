@@ -16,5 +16,12 @@
       "tabs",
       "http://*/*",
       "https://*/*"
-	]
+   ],
+   "content_scripts": [
+      {
+         "matches": ["http://*/*", "https://*/*"],
+         "js": ["js/hotkey.js"],
+         "run_at":"document_end"
+      }
+   ]
 }
