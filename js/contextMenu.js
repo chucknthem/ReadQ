@@ -43,7 +43,6 @@ var readQ = (function() {
 
    // main
    load();
-   setInterval(periodicSave, 5000); 
 })();
 // config
 var context = ["link", "page", "image", "video", "audio"];
