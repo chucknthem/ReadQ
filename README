@@ -1,1 +1,11 @@
 Temporarily save links to read later - a chrome extension
+
+HOTKEYS
+ q, e - enqueue current page
+ q, d - dequeue the oldest queued page and open it in a new tab
+ q, r - remove and discard the oldest queued page
+ q, p - pop the most recently queued page and open it in a new tab
+
+MENU (right click)
+ Add To Queue - enqueue current page OR if right clicked on a link, enqueue the linked page
+ Next Q'd Item  - dequeue the oldest queued page and open it in a new tab
